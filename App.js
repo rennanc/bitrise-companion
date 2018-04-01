@@ -9,50 +9,75 @@ import {
   Platform,
   StyleSheet,
   Text,
-  View
+  View,
+  FlatList,
+  Dimensions
 } from 'react-native';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+import Aplicacao from './src/components/Aplicacao'
 
-type Props = {};
-export default class App extends Component<Props> {
+export default class App extends Component {
+
+  constructor() {
+    super();
+    this.state = {
+      builds: []
+    }
+  }
+
+  componentDidMount() {
+      fetch('https://api.bitrise.io/v0.1/me/apps',
+      {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'token ******'
+      }
+    }).then(resposta => resposta.json())
+      .then(json => 
+        //console.warn('foi' + json.data[0].provider)
+        this.setState({builds: json})
+      ).catch(err =>
+        console.error('deu ruim')
+       )
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit App.js
-        </Text>
-        <Text style={styles.instructions}>
-          {instructions}
-        </Text>
+        <View style={styles.cabecalho}>
+          <Text style={styles.titulo}>Bitrise Companion</Text>
+        </View>
+        <FlatList style={styles.lista}
+          keyExtractor={item => item.slug}
+          data={this.state.builds.data}
+          renderItem={ ({item}) =>
+            <Aplicacao build={item} />
+          }
+        />
       </View>
     );
   }
 }
+const width = Dimensions.get('screen').width;
+const margem = Platform.OS == 'ios' ? 20 : 0;
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: margem,
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+  cabecalho:{
+    height: 50,
+    backgroundColor: '#3aa792',
   },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+  titulo:{
+    color: 'white',
+    fontSize: 19,
+    fontWeight: 'bold',
+    marginTop: 10,
+    textAlignVertical: 'bottom',
+    textAlign: 'center'
+  }
 });
