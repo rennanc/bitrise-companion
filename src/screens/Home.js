@@ -1,9 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component } from 'react';
 import {
   Platform,
@@ -11,18 +5,29 @@ import {
   Text,
   View,
   FlatList,
-  Dimensions
+  Dimensions,
+  AsyncStorage
 } from 'react-native';
 
-import Aplicacao from './src/components/Aplicacao'
+import Aplicacao from '../components/Aplicacao'
 
-export default class App extends Component {
+export default class Home extends Component {
 
   constructor() {
     super();
     this.state = {
       builds: []
     }
+  }
+
+  logout(){
+    AsyncStorage.clear();
+    this.props.navigator.resetTo({
+      screen:{
+        screen:'Login',
+        title:'Login'
+      }
+    })
   }
 
   componentDidMount() {
@@ -32,11 +37,10 @@ export default class App extends Component {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': 'token ******'
+        'Authorization': 'token '+ AsyncStorage.getItem('token')
       }
     }).then(resposta => resposta.json())
       .then(json => 
-        //console.warn('foi' + json.data[0].provider)
         this.setState({builds: json})
       ).catch(err =>
         console.error('deu ruim')
