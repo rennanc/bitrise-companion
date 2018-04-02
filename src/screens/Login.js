@@ -34,18 +34,17 @@ export default class Login extends Component {
       .then(json => {
         AsyncStorage.setItem('token', this.state.token)
         AsyncStorage.setItem('user', json.data)
+        this.openHome()
       }).catch(err =>
-        this.setState({mensagem: 'Token Inválido'})
+        this.setState({mensagem: err.message})
        )
   }
 
   openHome(){
     this.props.navigator.resetTo({
-        screen:{
-          screen:'Home',
-          title:'Home'
-        }
-      })
+      screen: 'Home',
+      title: 'Home'
+    });
   }
 
   clearInput(){
@@ -104,7 +103,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     flexDirection: 'column',
     backgroundColor: 'white',
-    height: 120,
+    height: 130,
     width: width - 10
   },
   header:{
@@ -147,7 +146,7 @@ const styles = StyleSheet.create({
       color: 'white'
   },
   mensagem:{
-      marginTop: 10,
+      marginTop: 0,
       color: '#e74c3c'
   }
 });

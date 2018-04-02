@@ -16,7 +16,8 @@ export default class Home extends Component {
   constructor() {
     super();
     this.state = {
-      builds: []
+      builds: [],
+      token: ''
     }
   }
 
@@ -31,20 +32,36 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
+    AsyncStorage.getItem('token')
+      .then(token => {
+        if(token){
+          console.warn(token)
+          this.setState({token: token})
+        }
+      })
+      .then(() => {
+
       fetch('https://api.bitrise.io/v0.1/me/apps',
-      {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'token '+ AsyncStorage.getItem('token')
-      }
-    }).then(resposta => resposta.json())
+        {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'token '+ this.state.token
+        }
+      })
+      .then(resposta => resposta.json())
       .then(json => 
         this.setState({builds: json})
       ).catch(err =>
         console.error('deu ruim')
-       )
+      )
+
+
+      })
+
+
+      
   }
 
   render() {
