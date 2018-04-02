@@ -14,13 +14,19 @@ AsyncStorage.getItem('token')
         if (token) {
             return {
                 screen: 'Home',
-                title: 'Home'
+                title: 'Home',
+                navigatorStyle: {
+                    navBarHidden: true
+                }
             }
         }
 
         return {
             screen: 'Login',
-            title: 'Login'
+            title: 'Login',
+            navigatorStyle: {
+                navBarHidden: true
+            }
         }
     })
     .then(screen => Navigation.startSingleScreenApp({ screen }));
