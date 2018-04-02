@@ -21,12 +21,12 @@ export default class Home extends Component {
     }
   }
 
-  logout(){
+  logout() {
     AsyncStorage.clear();
     this.props.navigator.resetTo({
-      screen:{
-        screen:'Login',
-        title:'Login'
+      screen: {
+        screen: 'Login',
+        title: 'Login'
       }
     })
   }
@@ -34,34 +34,32 @@ export default class Home extends Component {
   componentDidMount() {
     AsyncStorage.getItem('token')
       .then(token => {
-        if(token){
-          console.warn(token)
-          this.setState({token: token})
+        if (token) {
+          this.setState({ token: token })
         }
       })
       .then(() => {
 
-      fetch('https://api.bitrise.io/v0.1/me/apps',
-        {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': 'token '+ this.state.token
-        }
+        fetch('https://api.bitrise.io/v0.1/me/apps',
+          {
+            method: 'GET',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': 'token ' + this.state.token
+            }
+          })
+          .then(resposta => resposta.json())
+          .then(json =>
+            this.setState({ builds: json })
+          ).catch(err =>
+            console.error('deu ruim')
+          )
+
       })
-      .then(resposta => resposta.json())
-      .then(json => 
-        this.setState({builds: json})
-      ).catch(err =>
-        console.error('deu ruim')
-      )
 
 
-      })
 
-
-      
   }
 
   render() {
@@ -73,7 +71,7 @@ export default class Home extends Component {
         <FlatList style={styles.lista}
           keyExtractor={item => item.slug}
           data={this.state.builds.data}
-          renderItem={ ({item}) =>
+          renderItem={({ item }) =>
             <Aplicacao build={item} />
           }
         />
@@ -89,11 +87,11 @@ const styles = StyleSheet.create({
     marginTop: margem,
     flex: 1,
   },
-  cabecalho:{
+  cabecalho: {
     height: 50,
     backgroundColor: '#3aa792',
   },
-  titulo:{
+  titulo: {
     color: 'white',
     fontSize: 19,
     fontWeight: 'bold',

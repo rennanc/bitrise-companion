@@ -1,6 +1,6 @@
 //import { AppRegistry } from 'react-native';
 import { Navigation } from 'react-native-navigation';
-import { AsyncStorage} from 'react-native'
+import { AsyncStorage } from 'react-native'
 import Home from './src/screens/Home'
 import Aplicacao from './src/components/Aplicacao'
 import Login from './src/screens/Login'
@@ -11,19 +11,19 @@ Navigation.registerComponent('Home', () => Home);
 
 AsyncStorage.getItem('token')
     .then(token => {
-        if(token){
-            return{
+        if (token) {
+            return {
                 screen: 'Home',
                 title: 'Home'
             }
         }
 
-        return{
+        return {
             screen: 'Login',
             title: 'Login'
         }
     })
-    .then(screen => Navigation.startSingleScreenApp({screen}));
+    .then(screen => Navigation.startSingleScreenApp({ screen }));
 
 
 
