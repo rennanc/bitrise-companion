@@ -22,28 +22,35 @@ export default class Login extends Component {
     }
   }
   authenticate() {
-    fetch('https://api.bitrise.io/v0.1/me/',
-      {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': 'token ' + this.state.token
-        }
-      }).then(resposta => resposta.json())
-      .then(json => {
-        AsyncStorage.setItem('token', this.state.token)
-        AsyncStorage.setItem('user', json.data)
-        this.openHome()
-      }).catch(err =>
-        this.setState({ mensagem: err.message })
-      )
+    if(this.state.token){
+      fetch('https://api.bitrise.io/v0.1/me/',
+        {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'token ' + this.state.token
+          }
+        }).then(resposta => resposta.json())
+        .then(json => {
+          AsyncStorage.setItem('token', this.state.token)
+          AsyncStorage.setItem('user', json.data)
+          this.openHome()
+        }).catch(err =>
+          this.setState({ mensagem: err.message })
+        )
+    }else{
+      this.setState({ mensagem: 'Digite o Token' })
+    }
   }
 
   openHome() {
     this.props.navigator.resetTo({
       screen: 'Home',
-      title: 'Home'
+      title: 'Home',
+      navigatorStyle: {
+        navBarHidden: true
+    }
     });
   }
 
