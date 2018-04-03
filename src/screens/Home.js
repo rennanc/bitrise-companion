@@ -28,8 +28,8 @@ export default class Home extends Component {
   logout() {
     AsyncStorage.clear();
     this.props.navigator.resetTo({
-      screen: 'Login',
-      title: 'Login',
+      screen: 'Dashboard',
+      title: 'Dashboard',
       navigatorStyle: {
         navBarHidden: true
       }
