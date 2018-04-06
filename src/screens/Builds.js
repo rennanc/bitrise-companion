@@ -36,9 +36,17 @@ export default class Builds extends Component {
       topTabs: [{
         screenId: 'Log',
         title: 'Log',
+        passProps:{
+          slugApp: this.state.slugApp,
+          slugBuild: slugBuild,
+        },
       }, {
         screenId: 'Artifacts',
         title: 'Artifacts & Apps',
+        passProps: {
+          slugApp: this.state.slugApp,
+          slugBuild: slugBuild,
+        },
       }],
     });
   }

@@ -7,6 +7,7 @@ import Builds from './src/screens/Builds'
 import BuildDetail from './src/screens/BuildDetail'
 import Artifacts from './src/screens/tab/Artifacts'
 import Log from './src/screens/tab/Log'
+import Artifact from './src/components/Artifact';
 
 Navigation.registerComponent('Login', () => Login);
 Navigation.registerComponent('Home', () => Home);
@@ -14,6 +15,7 @@ Navigation.registerComponent('Builds', () => Builds);
 Navigation.registerComponent('BuildDetail', () => BuildDetail);
 Navigation.registerComponent('Log', () => Log);
 Navigation.registerComponent('Artifacts', () => Artifacts);
+Navigation.registerComponent('Artifact', () => Artifact);
 
 AsyncStorage.getItem('token')
     .then(token => {
