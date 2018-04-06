@@ -11,60 +11,49 @@ import {
   Image
 } from 'react-native';
 
-import Aplicacao from '../components/Aplicacao'
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Build from '../components/Build'
 
-export default class Home extends Component {
+export default class Builds extends Component {
 
   constructor() {
     super();
     this.state = {
-      apps: [],
+      builds: '',
+      slugApp: '',
       token: '',
       user: ''
     }
   }
 
-  logout() {
-    AsyncStorage.clear();
-    this.props.navigator.resetTo({
-      screen: 'Login',
-      title: 'Login',
-      navigatorStyle: {
-        navBarHidden: true
-      }
-    });
-  }
-
-  showBuildsCallback(slugApp){
+  showBuildDetailCallback(slugBuild){
     this.props.navigator.push({
-      screen: 'Builds',
-      title: 'Builds',
+      screen: 'BuildDetail',
+      title: 'BuildDetail',
       passProps: {
-        slugApp : slugApp
-      }
+        slugApp: this.state.slugApp,
+        slugBuild : slugBuild
+      },
+      topTabs: [{
+        screenId: 'Log',
+        title: 'Log',
+      }, {
+        screenId: 'Artifacts',
+        title: 'Artifacts & Apps',
+      }],
     });
   }
 
   componentDidMount() {
-    //load user
-    AsyncStorage.getItem('user')
-      .then(user =>{
-        if(user) {
-          this.setState({user : user})
-        }
-      });
-
     //load token
     AsyncStorage.getItem('token')
       .then(token => {
-        if (token) {
+        if (token && this.props.slugApp) {
           this.setState({token})
+          this.setState({slugApp : this.props.slugApp})
         }
       })
       .then(() => {
-
-        fetch('https://api.bitrise.io/v0.1/me/apps',
+        fetch('https://api.bitrise.io/v0.1/apps/' + this.state.slugApp + '/builds?next=',
           {
             method: 'GET',
             headers: {
@@ -75,7 +64,7 @@ export default class Home extends Component {
           })
           .then(resposta => resposta.json())
           .then(json =>
-            this.setState({ apps: json })
+            this.setState({ builds: json })
           ).catch(err =>
             console.error('deu ruim')
           )
@@ -89,22 +78,21 @@ export default class Home extends Component {
         <View style={styles.header}>
           <Image source={{uri: this.state.user.avatar_url}} style={styles.foto}/>
           <Text style={styles.title}>Bitrise Companion</Text>
-          <TouchableOpacity onPressIn={() => this.logout()} style={styles.button_exit}>
-            <Icon size={30} name="exit-to-app" color="#fff"/>
-          </TouchableOpacity>
         </View>
         <FlatList style={styles.lista}
           keyExtractor={item => item.slug}
-          data={this.state.apps.data}
+          data={this.state.builds.data}
           renderItem={({ item }) =>
-            <Aplicacao app={item}
-              showBuildsCallback={this.showBuildsCallback.bind(this)} />
+            <Build build={item}
+              showBuildDetailCallback={this.showBuildDetailCallback.bind(this)}
+               />
           }
         />
       </View>
     );
   }
 }
+
 const width = Dimensions.get('screen').width;
 const margin = Platform.OS == 'ios' ? 20 : 0;
 

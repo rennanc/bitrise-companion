@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 
-export default class Aplicacao extends Component {
+export default class Build extends Component {
 
   getBuildStatus(buildStatus){
     if(buildStatus === 1){
@@ -24,37 +24,25 @@ export default class Aplicacao extends Component {
     }
   }
 
-  getIcon(tipoProjeto){
-    if(tipoProjeto === 'android'){
-      return require('../../resources/img/ico-android.png');
-    }else if(tipoProjeto === 'ios'){
-      return require('../../resources/img/ico-ios.png');
-    }else if(tipoProjeto === 'react-native'){
-      return require('../../resources/img/ico-react.png');
-    }else if(tipoProjeto === 'ionic'){
-      return require('../../resources/img/ico-ionic.png');
-    }else if(tipoProjeto === 'xamarin'){
-      return require('../../resources/img/ico-xamarin.png');
-    }else if(tipoProjeto === 'cordova'){
-      return require('../../resources/img/ico-cordova.png');
-    }
-
-  }
-
   render() {
-    const {app, showBuildsCallback} = this.props;
+    const {build, showBuildDetailCallback} = this.props;
 
     return (
       <View>
         <TouchableOpacity style={styles.container}
-          onPress={() => {showBuildsCallback(app.slug)}}>
-          <View style={[styles.buildStatus, this.getBuildStatus(app.status)]} />
+          onPress={() => {showBuildDetailCallback(build.slug)}}>
+          <View style={[styles.buildStatus, this.getBuildStatus(build.status)]} />
           <View style={styles.details}>
-            <View style={styles.top}>
-              <Image style={styles.icone} source={this.getIcon(app.project_type)} />
-              <Text style={styles.title}>{app.title}</Text>
+            <View style={[styles.row, styles.borderDivision]}>
+              <Text style={[styles.row_text, styles.branch]}>{build.branch}</Text>
+              <Text style={[styles.row_text, styles.workflow]}>{build.triggered_workflow}</Text>
             </View>
-            <Text>{app.slug}</Text>
+            <View style={styles.row}>
+              <Text>#{build.build_number} - {build.triggered_at}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text numberOfLines={10} style={styles.commit_message}>{build.commit_message}</Text>
+            </View>
           </View>
         </TouchableOpacity>
       </View>
@@ -68,7 +56,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     flex: 1,
-    height: 70,
+    //height: 70,
     backgroundColor: '#fff',
     margin:10,
     marginBottom: 10,
@@ -97,20 +85,35 @@ const styles = StyleSheet.create({
     flex:1,
     margin:10,
   },
-  top:{
-    flex: 1,
-    flexDirection: 'row',
+  borderDivision:{
     borderBottomColor: '#bbb',
     borderBottomWidth: 1,
   },
-  icone:{
-    width:30,
-    height: 30
+  row:{
+    flex: 1,
+    flexDirection: 'row',
   },
-  title:{
+  row_text:{
     flex:1,
-    fontSize: 19,
+    fontSize: 12,
     fontWeight: 'bold',
+    textAlignVertical: 'center',
+    textAlign: 'center',
+    marginBottom: 5,
+  },
+  branch:{
+    backgroundColor: '#0C5B4C',
+    borderRadius: 6,
+    color: 'white',
+    marginRight: 5,
+  },
+  workflow:{
+    color: 'black',
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#999',
+  },
+  commit_message:{
     color: 'black'
   }
 });
