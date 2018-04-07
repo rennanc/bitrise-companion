@@ -21,15 +21,15 @@ export default class Artifact extends Component {
     }
 
     render() {
-        const { artifact, showBuildDetailCallback } = this.props;
+        const { artifact, showArtifactDetailCallback } = this.props;
 
         return (
             <View>
                 <TouchableOpacity style={styles.container}
-                    onPress={() => { showBuildDetailCallback(artifact.slug) }}>
+                    onPress={() => { showArtifactDetailCallback(artifact.slug) }}>
                     <View style={styles.details}>
                         <View style={[styles.row, styles.borderDivision]}>
-                            <Text style={[styles.row_text, styles.branch]}>{artifact.title}</Text>
+                            <Text style={[styles.row_text, styles.branch]}>{artifact.title}{artifact.slug}}</Text>
                         </View>
                         <View style={styles.row}>
                             <Text style={styles.row_text}>{this.getArtifactSize()}</Text>

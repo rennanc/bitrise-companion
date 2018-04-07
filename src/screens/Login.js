@@ -55,8 +55,11 @@ export default class Login extends Component {
   }
 
   clearInput() {
-    this.setState({ token: '' })
+    this.setState({ token: '' });
+    this.textInput.clear();
   }
+
+  
 
   _handlerToggleSwitch = () => this.setState(state => ({
     switchValue: !state.switchValue
@@ -72,7 +75,8 @@ export default class Login extends Component {
           <Text style={styles.label} >Autenticação</Text>
           <TextInput style={styles.input}
             onChangeText={token => this.setState({ token: token })}
-            placeholder="Adicione o Token" />
+            placeholder="Adicione o Token"
+            ref={input => { this.textInput = input }} />
           <Text style={styles.mensagem}>{this.state.mensagem}</Text>
         </View>
         <View style={styles.footer} >
