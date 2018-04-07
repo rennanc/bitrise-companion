@@ -20,8 +20,25 @@ export default class Artifacts extends Component {
       slugApp: '',
       slugBuild: '',
       token: '',
-      user: ''
+      user: '',
     }
+  }
+
+  showArtifactDetailCallback(slugArtifact){
+    this.props.navigator.showLightBox({
+      screen: 'ArtifactDetail',
+      passProps: {
+        slugApp: this.state.slugApp,
+        slugBuild: this.state.slugBuild,
+        slugArtifact: slugArtifact,
+      },
+      style: {
+        backgroundBlur: "dark",
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        tapBackgroundToDismiss: true,
+      },
+      animationType: 'slide-up',
+    });
   }
 
   componentDidMount() {
@@ -62,7 +79,9 @@ export default class Artifacts extends Component {
             keyExtractor={item => item.slug}
             data={this.state.artifacts.data}
             renderItem={({ item }) =>
-              <Artifact artifact={item}/>
+              <Artifact 
+                showArtifactDetailCallback={this.showArtifactDetailCallback.bind(this)}
+                artifact={item}/>
             }
           />
         </View>
