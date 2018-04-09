@@ -11,6 +11,8 @@ import {
   AsyncStorage
 } from 'react-native';
 
+import Loader from '../components/Loader'
+
 export default class Login extends Component {
 
   constructor() {
@@ -18,11 +20,13 @@ export default class Login extends Component {
     this.state = {
       token: '',
       switchValue: true,
-      mensagem: ''
+      mensagem: '',
+      loader: '',
     }
   }
   authenticate() {
     if(this.state.token){
+      this.setState({loader: true});
       fetch('https://api.bitrise.io/v0.1/me/',
         {
           method: 'GET',
@@ -31,17 +35,24 @@ export default class Login extends Component {
             'Content-Type': 'application/json',
             'Authorization': 'token ' + this.state.token
           }
-        }).then(resposta => resposta.json())
+        })
+        .then(response => response.json())
         .then(json => {
-          AsyncStorage.setItem('token', this.state.token)
-          AsyncStorage.setItem('user', json.data)
-          this.openHome()
-        }).catch(err =>
-          this.setState({ mensagem: err.message })
-        )
+          AsyncStorage.setItem('token', this.state.token);
+          AsyncStorage.setItem('user', json.data);
+          this.openHome();
+        }).catch(err => {
+          this.setState({ mensagem: err });
+          this.setState({loader: false});
+        })
     }else{
-      this.setState({ mensagem: 'Digite o Token' })
+      this.setState({loader: false});
+      this.setState({ mensagem: 'Digite o Token' });
     }
+  }
+
+  activeLoader(){
+    return this.state.loader ? <Loader /> : null;
   }
 
   openHome() {
@@ -59,13 +70,12 @@ export default class Login extends Component {
     this.textInput.clear();
   }
 
-  
-
   _handlerToggleSwitch = () => this.setState(state => ({
     switchValue: !state.switchValue
   }))
 
   render() {
+
     return (
       <View style={styles.container}>
         <View style={styles.header}>
@@ -79,6 +89,9 @@ export default class Login extends Component {
             ref={input => { this.textInput = input }} />
           <Text style={styles.mensagem}>{this.state.mensagem}</Text>
         </View>
+
+        {this.activeLoader()}
+
         <View style={styles.footer} >
           <View style={styles.footer_Block}>
             <Button style={styles.button}
