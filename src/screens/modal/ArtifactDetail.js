@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import RNFetchBlob from 'react-native-fetch-blob';
 
 export default class ArtifactDetail extends Component {
 
@@ -54,10 +55,32 @@ export default class ArtifactDetail extends Component {
      })
   }
 
+  downloadFile(artifact){
+    if (artifact) {
+     
+      
+      RNFetchBlob
+        .config({
+          // add this option that makes response data to be stored as a file,
+          // this is much more performant.
+          fileCache: true,
+        })
+        .fetch('GET', artifact.expiring_download_url, {
+          //some headers ..
+        })
+        .then((res) => {
+          // the temp file path
+          console.log('The file saved to ', res.path())
+        })
+    }
+  }
+
   render() {
+    const { artifact } = this.props;
+
     return (
       <View style={styles.container}>
-        <TouchableOpacity style={styles.details}>
+        <TouchableOpacity style={styles.details} onPress={() => this.downloadFile(this.state.artifact)}>
           <Icon style={styles.icon} size={120} name="file-download" color="#67c1f5"/>
           <Text style={styles.row_text}>{this.state.artifact.title}</Text>
         </TouchableOpacity>
