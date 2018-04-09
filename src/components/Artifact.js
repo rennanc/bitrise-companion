@@ -9,6 +9,7 @@ import {
     Image
 } from 'react-native';
 
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default class Artifact extends Component {
 
@@ -20,6 +21,15 @@ export default class Artifact extends Component {
         return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
     }
 
+    getPublicStatus(){
+        const publicStatus = this.props.artifact.is_public_page_enabled;
+        if(publicStatus){
+            return 'lock-open';
+        }
+        return 'lock-outline';
+    }
+
+
     render() {
         const { artifact, showArtifactDetailCallback } = this.props;
 
@@ -29,7 +39,8 @@ export default class Artifact extends Component {
                     onPress={() => { showArtifactDetailCallback(artifact.slug) }}>
                     <View style={styles.details}>
                         <View style={[styles.row, styles.borderDivision]}>
-                            <Text style={[styles.row_text, styles.branch]}>{artifact.title}{artifact.slug}}</Text>
+                            <Icon size={30} name={this.getPublicStatus()} color="#aaaaaa"/>
+                            <Text style={[styles.row_text, styles.branch]}>{artifact.title}</Text>
                         </View>
                         <View style={styles.row}>
                             <Text style={styles.row_text}>{this.getArtifactSize()}</Text>

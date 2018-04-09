@@ -6,7 +6,10 @@ import {
   View,
   Dimensions,
   AsyncStorage,
+  TouchableOpacity,
 } from 'react-native';
+
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default class ArtifactDetail extends Component {
 
@@ -54,10 +57,14 @@ export default class ArtifactDetail extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>{this.state.artifact.public_install_page_url}</Text>
+        <TouchableOpacity style={styles.details}>
+          <Icon style={styles.icon} size={120} name="file-download" color="#67c1f5"/>
+          <Text style={styles.row_text}>{this.state.artifact.title}</Text>
+        </TouchableOpacity>
       </View>
     );
   }
+
 }
 
 const width = Dimensions.get('screen').width;
@@ -68,6 +75,24 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height * 0.3,
     backgroundColor: '#ffffff',
     borderRadius: 5,
-    padding: 16,
+    padding: 5,
+  },
+  details:{
+    flex:1,
+    margin:5,
+  },
+  icon:{
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlignVertical: 'center',
+    textAlign: 'center',
+  },
+  row_text:{
+    flex:1,
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlignVertical: 'center',
+    textAlign: 'center',
+    marginBottom: 5,
   },
 });
