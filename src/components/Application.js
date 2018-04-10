@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0741f',
   },
   buildStatus_progress:{
-    backgroundColor: '#d7d7d7',
+    backgroundColor: '#8151a8',
   },
   details:{
     flex:1,
