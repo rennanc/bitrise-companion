@@ -25,8 +25,9 @@ export default class Home extends Component {
       dataSource: '',
       token: '',
       user: '',
-      loading: true,
       searchText: '',
+      loading: true,
+      refreshing: false,
     }
   }
 
@@ -67,6 +68,11 @@ export default class Home extends Component {
     );
   };
 
+  handleRefresh = () => {
+    this.setState({refreshing: true})
+    this.loadApps()
+  };
+
   filterSearch(searchText){
     const newData = this.state.apps.data.filter(function(item) {
       const itemData =  item.title.toUpperCase();
@@ -93,8 +99,10 @@ export default class Home extends Component {
     AsyncStorage.getItem('token')
       .then(token => {
         if (token) {
-          this.setState({ token })
-          this.setState({ loading: true })
+          this.setState({ 
+            token, 
+            loading: true,
+          })
         }
       })
       .then(() => {
@@ -109,9 +117,12 @@ export default class Home extends Component {
           })
           .then(resposta => resposta.json())
           .then(json => {
-            this.setState({ apps: json })
-            this.setState({ dataSource: json.data })
-            this.setState({ loading: false })
+            this.setState({ 
+              apps: json,
+              dataSource: json.data,
+              loading: false,
+              refreshing: false,
+            })
           })
           .catch(err => {
             console.error('deu ruim')
@@ -140,6 +151,8 @@ export default class Home extends Component {
           keyExtractor={item => item.slug}
           ListHeaderComponent={this.renderHeader}
           ListFooterComponent={this.renderFooter}
+          refreshing={this.state.refreshing}
+          onRefresh={this.handleRefresh}
           data={this.state.dataSource}
           renderItem={({ item }) =>
             <Application app={item}
