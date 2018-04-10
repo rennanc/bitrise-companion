@@ -6,13 +6,21 @@ import {
     View,
     TouchableOpacity,
     Dimensions,
-    Image
+    Image,
+    Share,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default class Artifact extends Component {
 
+    constructor() {
+        super();
+        this.state = {
+          artifact: '',
+        }
+    }
+    
     getArtifactSize(artifact){
         const bytes = this.props.artifact.file_size_bytes;
         var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
@@ -29,6 +37,7 @@ export default class Artifact extends Component {
         return 'lock-outline';
     }
 
+    
 
     render() {
         const { artifact, showArtifactDetailCallback } = this.props;
