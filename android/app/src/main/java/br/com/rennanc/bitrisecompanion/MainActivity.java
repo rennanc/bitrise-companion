@@ -1,4 +1,4 @@
-package com.reactnativeapp;
+package br.com.rennanc.bitrisecompanion;
 
 import com.reactnativenavigation.controllers.SplashActivity;
 
