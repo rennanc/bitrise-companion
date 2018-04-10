@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
   Platform,
   StyleSheet,
@@ -8,11 +8,13 @@ import {
   Dimensions,
   AsyncStorage,
   TouchableOpacity,
-  Image
-} from 'react-native';
+  Image,
+  ActivityIndicator,
+} from 'react-native'
 
 import Aplicacao from '../components/Aplicacao'
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/MaterialIcons'
+import { SearchBar } from 'react-native-elements'
 
 export default class Home extends Component {
 
@@ -20,8 +22,11 @@ export default class Home extends Component {
     super();
     this.state = {
       apps: [],
+      dataSource: '',
       token: '',
-      user: ''
+      user: '',
+      loading: true,
+      searchText: '',
     }
   }
 
@@ -46,24 +51,53 @@ export default class Home extends Component {
     });
   }
 
-  componentDidMount() {
+  renderHeader = () => {
+    return <SearchBar placeholder="busque aqui..."
+      onChangeText={(text) => this.filterSearch(text)}
+      value={this.state.searchText}
+      lightTheme  />
+  };
+
+  renderFooter = () => {
+    if(!this.state.loading) return null;
+    return (
+      <View style={{paddingVertical: 20, borderTopWidth:1 ,borderTopColor: '#CED0CE'}}>
+        <ActivityIndicator animating size="large" />
+      </View>
+    );
+  };
+
+  filterSearch(searchText){
+    const newData = this.state.apps.data.filter(function(item) {
+      const itemData =  item.title.toUpperCase();
+      const textData = searchText.toUpperCase();
+      return itemData.indexOf(textData) > -1
+    })
+    this.setState({
+      dataSource: newData,
+      searchText: searchText
+    })
+  }
+
+  loadUser(){
     //load user
     AsyncStorage.getItem('user')
-      .then(user =>{
-        if(user) {
-          this.setState({user : user})
+      .then(user => {
+        if (user) {
+          this.setState({ user: user })
         }
-      });
+      })
+  }
 
-    //load token
+  loadApps(){
     AsyncStorage.getItem('token')
       .then(token => {
         if (token) {
-          this.setState({token})
+          this.setState({ token })
+          this.setState({ loading: true })
         }
       })
       .then(() => {
-
         fetch('https://api.bitrise.io/v0.1/me/apps',
           {
             method: 'GET',
@@ -74,13 +108,22 @@ export default class Home extends Component {
             }
           })
           .then(resposta => resposta.json())
-          .then(json =>
+          .then(json => {
             this.setState({ apps: json })
-          ).catch(err =>
+            this.setState({ dataSource: json.data })
+            this.setState({ loading: false })
+          })
+          .catch(err => {
             console.error('deu ruim')
-          )
+            this.setState({ loading: false })
+          })
 
       })
+  }
+
+  componentDidMount() {
+    this.loadUser()
+    this.loadApps()
   }
 
   render() {
@@ -95,7 +138,9 @@ export default class Home extends Component {
         </View>
         <FlatList style={styles.lista}
           keyExtractor={item => item.slug}
-          data={this.state.apps.data}
+          ListHeaderComponent={this.renderHeader}
+          ListFooterComponent={this.renderFooter}
+          data={this.state.dataSource}
           renderItem={({ item }) =>
             <Aplicacao app={item}
               showBuildsCallback={this.showBuildsCallback.bind(this)} />
