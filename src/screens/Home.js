@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
 } from 'react-native'
 
-import Aplicacao from '../components/Aplicacao'
+import Application from '../components/Application'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { SearchBar } from 'react-native-elements'
 
@@ -142,7 +142,7 @@ export default class Home extends Component {
           ListFooterComponent={this.renderFooter}
           data={this.state.dataSource}
           renderItem={({ item }) =>
-            <Aplicacao app={item}
+            <Application app={item}
               showBuildsCallback={this.showBuildsCallback.bind(this)} />
           }
         />

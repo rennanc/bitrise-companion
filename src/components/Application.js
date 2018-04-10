@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 
-export default class Aplicacao extends Component {
+export default class Application extends Component {
 
   getBuildStatus(buildStatus){
     if(buildStatus === 1){
