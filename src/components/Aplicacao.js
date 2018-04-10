@@ -26,17 +26,17 @@ export default class Aplicacao extends Component {
 
   getIcon(tipoProjeto){
     if(tipoProjeto === 'android'){
-      return require('../../resources/img/ico-android.png');
+      return require('../../src/resources/img/ico-android.png');
     }else if(tipoProjeto === 'ios'){
-      return require('../../resources/img/ico-ios.png');
+      return require('../../src/resources/img/ico-ios.png');
     }else if(tipoProjeto === 'react-native'){
-      return require('../../resources/img/ico-react.png');
+      return require('../../src/resources/img/ico-react.png');
     }else if(tipoProjeto === 'ionic'){
-      return require('../../resources/img/ico-ionic.png');
+      return require('../../src/resources/img/ico-ionic.png');
     }else if(tipoProjeto === 'xamarin'){
-      return require('../../resources/img/ico-xamarin.png');
+      return require('../../src/resources/img/ico-xamarin.png');
     }else if(tipoProjeto === 'cordova'){
-      return require('../../resources/img/ico-cordova.png');
+      return require('../../src/resources/img/ico-cordova.png');
     }
 
   }
