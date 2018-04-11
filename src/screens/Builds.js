@@ -8,7 +8,8 @@ import {
   Dimensions,
   AsyncStorage,
   TouchableOpacity,
-  Image
+  Image,
+  ActivityIndicator,
 } from 'react-native';
 
 import Build from '../components/Build'
@@ -21,7 +22,9 @@ export default class Builds extends Component {
       builds: '',
       slugApp: '',
       token: '',
-      user: ''
+      user: '',
+      loading: true,
+      refreshing: false,
     }
   }
 
@@ -56,13 +59,29 @@ export default class Builds extends Component {
     });
   }
 
-  componentDidMount() {
-    //load token
+  renderFooter = () => {
+    if (!this.state.loading) return null;
+    return (
+      <View style={{ paddingVertical: 20, borderTopWidth: 1, borderTopColor: '#CED0CE' }}>
+        <ActivityIndicator animating size="large" />
+      </View>
+    );
+  };
+
+  handleRefresh = () => {
+    this.setState({ refreshing: true })
+    this.loadBuilds()
+  };
+
+  loadBuilds(){
     AsyncStorage.getItem('token')
       .then(token => {
         if (token && this.props.slugApp) {
-          this.setState({token})
-          this.setState({slugApp : this.props.slugApp})
+          this.setState({ 
+            token,
+            slugApp: this.props.slugApp,
+            loading: true,
+          })
         }
       })
       .then(() => {
@@ -77,7 +96,11 @@ export default class Builds extends Component {
           })
           .then(resposta => resposta.json())
           .then(json =>
-            this.setState({ builds: json })
+            this.setState({ 
+              builds: json,
+              loading: false,
+              refreshing: false,
+             })
           ).catch(err =>
             console.error('deu ruim')
           )
@@ -85,11 +108,18 @@ export default class Builds extends Component {
       })
   }
 
+  componentDidMount() {
+    this.loadBuilds()
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <FlatList style={styles.lista}
           keyExtractor={item => item.slug}
+          ListFooterComponent={this.renderFooter}
+          refreshing={this.state.refreshing}
+          onRefresh={this.handleRefresh}
           data={this.state.builds.data}
           renderItem={({ item }) =>
             <Build build={item}

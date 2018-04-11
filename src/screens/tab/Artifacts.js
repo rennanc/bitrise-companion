@@ -6,7 +6,8 @@ import {
   View,
   Dimensions,
   AsyncStorage,
-  FlatList
+  FlatList,
+  ActivityIndicator,
 } from 'react-native';
 
 import Artifact from '../../components/Artifact'
@@ -21,6 +22,8 @@ export default class Artifacts extends Component {
       slugBuild: '',
       token: '',
       user: '',
+      loading: true,
+      refreshing: false,
     }
   }
 
@@ -41,34 +44,58 @@ export default class Artifacts extends Component {
     });
   }
 
+  renderFooter = () => {
+    if (!this.state.loading) return null;
+    return (
+      <View style={{ paddingVertical: 20, borderTopWidth: 1, borderTopColor: '#CED0CE' }}>
+        <ActivityIndicator animating size="large" />
+      </View>
+    );
+  };
+
+  handleRefresh = () => {
+    this.setState({ refreshing: true })
+    this.loadArtifacts()
+  };
+
+  loadArtifacts(){
+    AsyncStorage.getItem('token')
+      .then(token => {
+        if (token && this.props.slugApp) {
+          this.setState({ 
+            token,
+            slugApp: this.props.slugApp,
+            slugBuild: this.props.slugBuild,
+            loading: true,
+          });
+        }
+      })
+      .then(() => {
+        fetch('https://api.bitrise.io/v0.1/apps/' + this.state.slugApp + '/builds/' + this.state.slugBuild + '/artifacts',
+          {
+            method: 'GET',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': 'token ' + this.state.token
+            }
+          })
+          .then(resposta => resposta.json())
+          .then(json =>
+            this.setState({ 
+              artifacts: json,
+              loading: false,
+              refreshing: false,
+            })
+          ).catch(err =>
+            console.error('deu ruim')
+          )
+
+      })
+  }
+
   componentDidMount() {
-
-     AsyncStorage.getItem('token')
-     .then(token => {
-       if (token && this.props.slugApp) {
-         this.setState({ token });
-         this.setState({ slugApp: this.props.slugApp });
-         this.setState({ slugBuild: this.props.slugBuild });
-       }
-     })
-     .then(() => {
-       fetch('https://api.bitrise.io/v0.1/apps/' + this.state.slugApp + '/builds/' + this.state.slugBuild + '/artifacts',
-         {
-           method: 'GET',
-           headers: {
-             Accept: 'application/json',
-             'Content-Type': 'application/json',
-             'Authorization': 'token ' + this.state.token
-           }
-         })
-         .then(resposta => resposta.json())
-         .then(json =>
-           this.setState({ artifacts: json })
-         ).catch(err =>
-           console.error('deu ruim')
-         )
-
-     })
+    this.loadArtifacts()
   }
 
   render() {
@@ -77,6 +104,9 @@ export default class Artifacts extends Component {
         <View>
           <FlatList
             keyExtractor={item => item.slug}
+            ListFooterComponent={this.renderFooter}
+            refreshing={this.state.refreshing}
+            onRefresh={this.handleRefresh}
             data={this.state.artifacts.data}
             renderItem={({ item }) =>
               <Artifact 

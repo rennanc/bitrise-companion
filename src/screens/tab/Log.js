@@ -6,7 +6,8 @@ import {
   View,
   Dimensions,
   AsyncStorage,
-  FlatList
+  FlatList,
+  ActivityIndicator,
 } from 'react-native';
 
 export default class Log extends Component {
@@ -18,39 +19,64 @@ export default class Log extends Component {
       slugApp: '',
       slugBuild: '',
       token: '',
-      user: ''
+      user: '',
+      loading: true,
+      refreshing: false,
     }
   }
 
-  componentDidMount() {
-     //load token
-   
-     AsyncStorage.getItem('token')
-     .then(token => {
-       if (token && this.props.slugApp && this.props.slugBuild) {
-         this.setState({token});
-         this.setState({ slugApp : this.props.slugApp });
-         this.setState({ slugBuild: this.props.slugBuild });
-       }
-     })
-     .then(() => {
-       fetch('https://api.bitrise.io/v0.1/apps/' + this.state.slugApp + '/builds/' + this.state.slugBuild + '/log',
-         {
-           method: 'GET',
-           headers: {
-             Accept: 'application/json',
-             'Content-Type': 'application/json',
-             'Authorization': 'token ' + this.state.token
-           }
-         })
-         .then(resposta => resposta.json())
-         .then(json => 
-          this.setState({ logs: json })
-         ).catch(err =>
-           console.error('deu ruim')
-         )
+  renderFooter = () => {
+    if (!this.state.loading) return null;
+    return (
+      <View style={{ paddingVertical: 20, borderTopWidth: 1, borderTopColor: '#CED0CE' }}>
+        <ActivityIndicator animating size="large" />
+      </View>
+    );
+  };
 
-     })
+  handleRefresh = () => {
+    this.setState({ refreshing: true })
+    this.loadLogs()
+  };
+
+  loadLogs(){
+    AsyncStorage.getItem('token')
+      .then(token => {
+        if (token && this.props.slugApp && this.props.slugBuild) {
+          this.setState({ 
+            token,
+            slugApp: this.props.slugApp,
+            slugBuild: this.props.slugBuild,
+            loading: true,
+          });
+        }
+      })
+      .then(() => {
+        fetch('https://api.bitrise.io/v0.1/apps/' + this.state.slugApp + '/builds/' + this.state.slugBuild + '/log',
+          {
+            method: 'GET',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': 'token ' + this.state.token
+            }
+          })
+          .then(resposta => resposta.json())
+          .then(json =>
+            this.setState({ 
+              logs: json,
+              loading: false,
+              refreshing: false,
+            })
+          ).catch(err =>
+            console.error('deu ruim')
+          )
+
+      })
+  }
+
+  componentDidMount() {
+    this.loadLogs()
   }
 
   render() {
@@ -58,6 +84,9 @@ export default class Log extends Component {
       <View style={styles.container}>
         <FlatList 
           keyExtractor={item => item.generated_log_chunks_num}
+          ListFooterComponent={this.renderFooter}
+          refreshing={this.state.refreshing}
+          onRefresh={this.handleRefresh}
           data={this.state.logs.log_chunks}
           renderItem={({ item }) =>
             <Text style={styles.log_text}>{item.chunk}</Text>
