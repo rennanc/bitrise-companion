@@ -25,27 +25,32 @@ export default class Builds extends Component {
     }
   }
 
-  showBuildDetailCallback(slugBuild){
+  showBuildDetailCallback(build){
     this.props.navigator.push({
       screen: 'BuildDetail',
-      title: 'BuildDetail',
+      title: 'Details of Build #' + build.build_number,
       passProps: {
         slugApp: this.state.slugApp,
-        slugBuild : slugBuild
+        slugBuild: build.slug
+      },
+      navigatorStyle: {
+        navBarBackgroundColor: '#3aa792',
+        navBarTextColor: '#fff',
+        navBarButtonColor: '#fff',
       },
       topTabs: [{
         screenId: 'Log',
         title: 'Log',
         passProps:{
           slugApp: this.state.slugApp,
-          slugBuild: slugBuild,
+          slugBuild: build.slug,
         },
       }, {
         screenId: 'Artifacts',
         title: 'Artifacts & Apps',
         passProps: {
           slugApp: this.state.slugApp,
-          slugBuild: slugBuild,
+          slugBuild: build.slug,
         },
       }],
     });
@@ -83,10 +88,6 @@ export default class Builds extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Image source={{uri: this.state.user.avatar_url}} style={styles.foto}/>
-          <Text style={styles.title}>Bitrise Companion</Text>
-        </View>
         <FlatList style={styles.lista}
           keyExtractor={item => item.slug}
           data={this.state.builds.data}

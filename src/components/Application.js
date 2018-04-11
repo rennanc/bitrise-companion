@@ -45,9 +45,9 @@ export default class Application extends Component {
     const {app, showBuildsCallback} = this.props;
 
     return (
-      <View>
+      <View key={app.slug}>
         <TouchableOpacity style={styles.container}
-          onPress={() => {showBuildsCallback(app.slug)}}>
+          onPress={() => {showBuildsCallback(app)}}>
           <View style={[styles.buildStatus, this.getBuildStatus(app.status)]} />
           <View style={styles.details}>
             <View style={styles.top}>

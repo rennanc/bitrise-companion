@@ -56,15 +56,13 @@ export default class Log extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View>
-          <FlatList 
-            keyExtractor={item => item.generated_log_chunks_num}
-            data={this.state.logs.log_chunks}
-            renderItem={({ item }) =>
-              <Text style={styles.log_text}>{item.chunk}</Text>
-            }
-          />
-        </View>
+        <FlatList 
+          keyExtractor={item => item.generated_log_chunks_num}
+          data={this.state.logs.log_chunks}
+          renderItem={({ item }) =>
+            <Text style={styles.log_text}>{item.chunk}</Text>
+          }
+        />
       </View>
     );
   }

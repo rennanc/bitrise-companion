@@ -42,18 +42,24 @@ export default class Home extends Component {
     });
   }
 
-  showBuildsCallback(slugApp){
+  showBuildsCallback(app){
+
     this.props.navigator.push({
       screen: 'Builds',
-      title: 'Builds',
+      title: 'Builds of ' + app.title,
       passProps: {
-        slugApp : slugApp
+        slugApp: app.slug
+      },
+      navigatorStyle: {
+        navBarBackgroundColor: '#3aa792',
+        navBarTextColor: '#fff',
+        navBarButtonColor: '#fff',
       }
     });
   }
 
   renderHeader = () => {
-    return <SearchBar placeholder="busque aqui..."
+    return <SearchBar placeholder="Search Apps..."
       onChangeText={(text) => this.filterSearch(text)}
       value={this.state.searchText}
       lightTheme  />

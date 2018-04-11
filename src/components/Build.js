@@ -30,7 +30,7 @@ export default class Build extends Component {
     return (
       <View>
         <TouchableOpacity style={styles.container}
-          onPress={() => {showBuildDetailCallback(build.slug)}}>
+          onPress={() => {showBuildDetailCallback(build)}}>
           <View style={[styles.buildStatus, this.getBuildStatus(build.status)]} />
           <View style={styles.details}>
             <View style={[styles.row, styles.borderDivision]}>

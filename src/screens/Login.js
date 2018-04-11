@@ -94,12 +94,18 @@ export default class Login extends Component {
 
         <View style={styles.footer} >
           <View style={styles.footer_Block}>
-            <Button style={styles.button}
-              onPress={this.clearInput.bind(this)}
-              title="Limpar" />
-            <Button style={styles.button}
-              onPress={this.authenticate.bind(this)}
-              title="Entrar" />
+            <View style={styles.button}>
+              <Button 
+                color='#8151a8'
+                onPress={this.clearInput.bind(this)}
+                title="Limpar" />
+            </View>
+            <View style={styles.button}>
+              <Button 
+                color='#8151a8'
+                onPress={this.authenticate.bind(this)}
+                title="Entrar" />
+            </View>
           </View>
           <View style={styles.footer_Block}>
             <Switch
@@ -162,9 +168,8 @@ const styles = StyleSheet.create({
     height: 60,
   },
   button: {
-    margin: 80,
-    marginLeft: 30,
-    height: 30
+    margin: 5,
+    width: 100,
   },
   switch_label: {
     color: 'white'
