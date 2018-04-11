@@ -8,10 +8,13 @@ import {
   Dimensions,
   Button,
   Switch,
-  AsyncStorage
+  AsyncStorage,
+  Image
 } from 'react-native';
 
 import Loader from '../components/Loader'
+
+import BitriseFetchService from '../services/BitriseFetchService'
 
 export default class Login extends Component {
 
@@ -26,28 +29,21 @@ export default class Login extends Component {
   }
   authenticate() {
     if(this.state.token){
-      this.setState({loader: true});
-      fetch('https://api.bitrise.io/v0.1/me/',
-        {
-          method: 'GET',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': 'token ' + this.state.token
-          }
+      this.setState({loader: true})
+
+      BitriseFetchService.getMe(this.state.token)
+        .then(() => {
+          this.openHome()
         })
-        .then(response => response.json())
-        .then(json => {
-          AsyncStorage.setItem('token', this.state.token);
-          AsyncStorage.setItem('user', json.data);
-          this.openHome();
-        }).catch(err => {
-          this.setState({ mensagem: err });
-          this.setState({loader: false});
+        .catch(err => {
+          this.setState({ 
+              mensagem: err,
+              loader: false
+          })
         })
     }else{
       this.setState({loader: false});
-      this.setState({ mensagem: 'Digite o Token' });
+      this.setState({ mensagem: 'Type the Token' })
     }
   }
 
@@ -79,13 +75,14 @@ export default class Login extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
+          <Image style={styles.logo} source={require('../resources/img/companion-logo.png')} />
           <Text style={styles.title}>Bitrise Companion</Text>
         </View>
         <View style={styles.block}>
-          <Text style={styles.label} >Autenticação</Text>
+          <Text style={styles.label} >Authentication</Text>
           <TextInput style={styles.input}
             onChangeText={token => this.setState({ token: token })}
-            placeholder="Adicione o Token"
+            placeholder="Type The Token"
             ref={input => { this.textInput = input }} />
           <Text style={styles.mensagem}>{this.state.mensagem}</Text>
         </View>
@@ -98,21 +95,23 @@ export default class Login extends Component {
               <Button 
                 color='#8151a8'
                 onPress={this.clearInput.bind(this)}
-                title="Limpar" />
+                title="Clear" />
             </View>
             <View style={styles.button}>
               <Button 
                 color='#8151a8'
                 onPress={this.authenticate.bind(this)}
-                title="Entrar" />
+                title="Login" />
             </View>
           </View>
           <View style={styles.footer_Block}>
+           {/*
             <Switch
               onValueChange={this._handlerToggleSwitch}
               value={this.state.switchValue}
             />
-            <Text style={styles.switch_label}>Gravar Token</Text>
+            <Text style={styles.switch_label}>Remember Token</Text>*/
+           }
           </View>
         </View>
       </View>
@@ -177,5 +176,9 @@ const styles = StyleSheet.create({
   mensagem: {
     marginTop: 0,
     color: '#e74c3c'
+  },
+  logo:{
+    width: 100,
+    height: 100,
   }
 });

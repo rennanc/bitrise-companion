@@ -13,6 +13,25 @@ export default class BitriseFetchService{
         }
     }
 
+    static getMe(token){
+
+        return fetch('https://api.bitrise.io/v0.1/me/',
+            {
+                method: 'GET',
+                headers: new Headers(this.getHeader(token))
+            })
+            .then(response => {
+                if (response.ok)
+                    return response.json()
+                throw new Error('Ocorreu um problema ao obter os dados')
+            })
+            .then(json => {
+                AsyncStorage.setItem('token', token)
+                AsyncStorage.setItem('user', json.data)
+                return json
+            })
+    }
+
     static getApps() {
         return AsyncStorage.getItem('token')
             .then(token => {
