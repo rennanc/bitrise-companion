@@ -5,23 +5,58 @@ const bitriseApiAddress = 'https://api.bitrise.io/v0.1/'
 
 export default class BitriseFetchService{
 
-    static loadApps() {
-        
+    static getHeader(token){
+        return {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'token ' + token,
+        }
+    }
+
+    static getApps() {
         return AsyncStorage.getItem('token')
             .then(token => {
                 return {
                     method: 'GET',
-                    headers: new Headers({
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                        'Authorization': 'token ' + token,
-                    })
+                    headers: new Headers(this.getHeader(token))
                 }
             })
             .then(requestInfo => fetch(bitriseApiAddress + 'me/apps',requestInfo))
-            .then(resposta => {
-                if (resposta.ok)
-                    return resposta.json()
+            .then(response => {
+                if (response.ok)
+                    return response.json()
+                throw new Error('Ocorreu um problema ao obter os dados')
+            })
+    }
+
+    static getBuilds(slugApp){
+        return AsyncStorage.getItem('token')
+            .then(token => {
+                return {
+                    method: 'GET',
+                    headers: new Headers(this.getHeader(token))
+                }
+            })
+            .then(requestInfo => fetch(bitriseApiAddress + 'apps/' + slugApp + '/builds?next=', requestInfo))
+            .then(response => {
+                if (response.ok)
+                    return response.json()
+                throw new Error('Ocorreu um problema ao obter os dados')
+            })
+    }
+
+    static getBuildDetails(slugApp, slugBuild){
+        return AsyncStorage.getItem('token')
+            .then(token => {
+                return {
+                    method: 'GET',
+                    headers: new Headers(this.getHeader(token))
+                }
+            })
+            .then(requestInfo => fetch('https://api.bitrise.io/v0.1/apps/' + slugApp + '/builds/' + slugBuild, requestInfo))
+            .then(response => {
+                if (response.ok)
+                    return response.json()
                 throw new Error('Ocorreu um problema ao obter os dados')
             })
     }

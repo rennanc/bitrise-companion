@@ -80,7 +80,6 @@ export default class ArtifactDetail extends Component {
   }
 
   shareLink(artifact){
-    console.warn(artifact.public_install_page_url)
     Share.share({
         message: 'Baixe o Aplicativo pelo Bitrise '+ artifact.public_install_page_url,
         url: artifact.public_install_page_url,

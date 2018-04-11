@@ -104,7 +104,7 @@ export default class Home extends Component {
   }
 
   loadApps(){
-    BitriseFetchService.loadApps()
+    BitriseFetchService.getApps()
       .then(json =>
         this.setState({
           apps: json,

@@ -8,6 +8,8 @@ import {
   AsyncStorage
 } from 'react-native';
 
+import BitriseFetchService from '../services/BitriseFetchService'
+
 export default class BuildDetail extends Component {
 
   constructor() {
@@ -22,8 +24,15 @@ export default class BuildDetail extends Component {
   }
 
   componentDidMount() {
+    BitriseFetchService.getBuildDetails(this.props.slugApp, this.state.slugBuild)
+      .then(json =>
+        this.setState({ builds: json })
+      )
+      .catch(err =>
+        console.error('deu ruim')
+      )
      //load token
-     AsyncStorage.getItem('token')
+     /*AsyncStorage.getItem('token')
      .then(token => {
        if (token && this.props.slugApp) {
          this.setState({token})
@@ -47,7 +56,7 @@ export default class BuildDetail extends Component {
            console.error('deu ruim')
          )
 
-     })
+     })*/
   }
 
   render() {

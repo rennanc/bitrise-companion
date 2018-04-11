@@ -14,6 +14,8 @@ import {
 
 import Build from '../components/Build'
 
+import BitriseFetchService from '../services/BitriseFetchService'
+
 export default class Builds extends Component {
 
   constructor() {
@@ -28,7 +30,7 @@ export default class Builds extends Component {
     }
   }
 
-  showBuildDetailCallback(build){
+  showBuildDetailCallback(build){    
     this.props.navigator.push({
       screen: 'BuildDetail',
       title: 'Details of Build #' + build.build_number,
@@ -74,37 +76,18 @@ export default class Builds extends Component {
   };
 
   loadBuilds(){
-    AsyncStorage.getItem('token')
-      .then(token => {
-        if (token && this.props.slugApp) {
-          this.setState({ 
-            token,
-            slugApp: this.props.slugApp,
-            loading: true,
-          })
-        }
-      })
-      .then(() => {
-        fetch('https://api.bitrise.io/v0.1/apps/' + this.state.slugApp + '/builds?next=',
-          {
-            method: 'GET',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-              'Authorization': 'token ' + this.state.token
-            }
-          })
-          .then(resposta => resposta.json())
-          .then(json =>
-            this.setState({ 
-              builds: json,
-              loading: false,
-              refreshing: false,
-             })
-          ).catch(err =>
-            console.error('deu ruim')
-          )
-
+    this.setState({slugApp: this.props.slugApp})
+    BitriseFetchService.getBuilds(this.props.slugApp)
+      .then(json =>
+        this.setState({
+          builds: json,
+          loading: false,
+          refreshing: false,
+        })
+      )
+      .catch(err => {
+        console.error('deu ruim')
+        this.setState({ loading: false })
       })
   }
 
