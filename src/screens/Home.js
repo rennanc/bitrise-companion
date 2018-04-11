@@ -16,6 +16,8 @@ import Application from '../components/Application'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { SearchBar } from 'react-native-elements'
 
+import BitriseFetchService from '../services/BitriseFetchService'
+
 export default class Home extends Component {
 
   constructor() {
@@ -102,39 +104,18 @@ export default class Home extends Component {
   }
 
   loadApps(){
-    AsyncStorage.getItem('token')
-      .then(token => {
-        if (token) {
-          this.setState({ 
-            token, 
-            loading: true,
-          })
-        }
-      })
-      .then(() => {
-        fetch('https://api.bitrise.io/v0.1/me/apps',
-          {
-            method: 'GET',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-              'Authorization': 'token ' + this.state.token
-            }
-          })
-          .then(resposta => resposta.json())
-          .then(json => {
-            this.setState({ 
-              apps: json,
-              dataSource: json.data,
-              loading: false,
-              refreshing: false,
-            })
-          })
-          .catch(err => {
-            console.error('deu ruim')
-            this.setState({ loading: false })
-          })
-
+    BitriseFetchService.loadApps()
+      .then(json =>
+        this.setState({
+          apps: json,
+          dataSource: json.data,
+          loading: false,
+          refreshing: false,
+        })
+      )
+      .catch(err => {
+        console.error('deu ruim')
+        this.setState({ loading: false })
       })
   }
 
