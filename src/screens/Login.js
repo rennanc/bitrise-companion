@@ -26,7 +26,6 @@ export default class Login extends Component {
       switchValue: true,
       mensagem: '',
       loader: '',
-      textInput: '',
     }
   }
   authenticate() {
@@ -65,7 +64,7 @@ export default class Login extends Component {
   
   componentDidMount() {
     if(this.props.token){
-      this.setState({ textInput: this.props.token})
+      this.setState({ token: this.props.token})
     }
   }
 
@@ -104,7 +103,7 @@ export default class Login extends Component {
             onChangeText={token => this.setState({ token: token })}
             placeholder="Type The Token"
             ref={input => { this.textInput = input }}
-            value={this.state.textInput} />
+            value={this.state.token} />
           <Text style={styles.mensagem}>{this.state.mensagem}</Text>
         </View>
 
