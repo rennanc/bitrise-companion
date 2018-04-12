@@ -8,6 +8,7 @@ import com.facebook.soloader.SoLoader;
 import com.reactnativenavigation.NavigationApplication;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
+import org.reactnative.camera.RNCameraPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,7 +26,8 @@ public class MainApplication extends NavigationApplication implements ReactAppli
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
           new VectorIconsPackage(),
-          new RNFetchBlobPackage()
+          new RNFetchBlobPackage(),
+          new RNCameraPackage()
       );
     }
 
@@ -57,7 +59,8 @@ public class MainApplication extends NavigationApplication implements ReactAppli
     // No need to add RnnPackage and MainReactPackage
     return Arrays.<ReactPackage>asList(
             new VectorIconsPackage(),
-            new RNFetchBlobPackage()
+            new RNFetchBlobPackage(),
+            new RNCameraPackage()
     );
   }
 

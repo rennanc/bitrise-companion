@@ -9,7 +9,8 @@ import {
   Button,
   Switch,
   AsyncStorage,
-  Image
+  Image,
+  TouchableOpacity
 } from 'react-native';
 
 import Loader from '../components/Loader'
@@ -25,6 +26,7 @@ export default class Login extends Component {
       switchValue: true,
       mensagem: '',
       loader: '',
+      textInput: '',
     }
   }
   authenticate() {
@@ -57,7 +59,25 @@ export default class Login extends Component {
       title: 'Home',
       navigatorStyle: {
         navBarHidden: true
+      }
+    });
+  }
+  
+  componentDidMount() {
+    if(this.props.token){
+      this.setState({ textInput: this.props.token})
     }
+  }
+
+  openScanner() {
+    this.props.navigator.showLightBox({
+      screen: 'ScannerToken',
+      style: {
+        backgroundBlur: "dark",
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        tapBackgroundToDismiss: true,
+      },
+      animationType: 'slide-up',
     });
   }
 
@@ -83,7 +103,8 @@ export default class Login extends Component {
           <TextInput style={styles.input}
             onChangeText={token => this.setState({ token: token })}
             placeholder="Type The Token"
-            ref={input => { this.textInput = input }} />
+            ref={input => { this.textInput = input }}
+            value={this.state.textInput} />
           <Text style={styles.mensagem}>{this.state.mensagem}</Text>
         </View>
 
@@ -105,6 +126,10 @@ export default class Login extends Component {
             </View>
           </View>
           <View style={styles.footer_Block}>
+            <Button
+              color='#8151a8'
+              onPress={this.openScanner.bind(this)}
+              title="Scan Token" />
            {/*
             <Switch
               onValueChange={this._handlerToggleSwitch}
@@ -112,6 +137,7 @@ export default class Login extends Component {
             />
             <Text style={styles.switch_label}>Remember Token</Text>*/
            }
+
           </View>
         </View>
       </View>
@@ -147,6 +173,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     margin: 10,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
     color: 'white',
@@ -180,5 +207,10 @@ const styles = StyleSheet.create({
   logo:{
     width: 100,
     height: 100,
+  },
+  qrCodeBox:{
+    width: 60,
+    height: 60,
+    flex: 1,
   }
 });
