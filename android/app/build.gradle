@@ -101,12 +101,16 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    buildToolsVersion "26.0.2"
+
+    dexOptions {
+        jumboMode true
+    }
 
     defaultConfig {
         applicationId "br.com.rennanc.bitrisecompanion"
         minSdkVersion 16
-        targetSdkVersion 22
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         ndk {
@@ -149,6 +153,7 @@ dependencies {
     compile project(':react-native-navigation')
     compile project(':react-native-vector-icons')
     compile project(':react-native-fetch-blob')
+    compile project(':react-native-svg')
     compile (project(':react-native-camera')) {
         exclude group: "com.google.android.gms"
         compile 'com.android.support:exifinterface:25.+'

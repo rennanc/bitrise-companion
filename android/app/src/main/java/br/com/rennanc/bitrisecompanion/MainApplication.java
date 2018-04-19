@@ -9,6 +9,7 @@ import com.reactnativenavigation.NavigationApplication;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import org.reactnative.camera.RNCameraPackage;
+import com.horcrux.svg.SvgPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -60,7 +61,8 @@ public class MainApplication extends NavigationApplication implements ReactAppli
     return Arrays.<ReactPackage>asList(
             new VectorIconsPackage(),
             new RNFetchBlobPackage(),
-            new RNCameraPackage()
+            new RNCameraPackage(),
+            new SvgPackage()
     );
   }
 
