@@ -1,4 +1,4 @@
-# Bitrise Companion (Unofficial App)
+# Bitrise Companion (Unofficial App) [![Build Status](https://www.bitrise.io/app/4ba5613c780c286f/status.svg?token=DdUSNiFheQQs8V1lfocYEA)](https://www.bitrise.io/app/4ba5613c780c286f)
 www.bitrise.io
 
 ```
