@@ -121,7 +121,6 @@ android {
             storePassword System.getenv("BITRISEIO_ANDROID_KEYSTORE_PASSWORD")
         }
     }
-    .
     splits {
         abi {
             reset()
