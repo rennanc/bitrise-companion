@@ -31,32 +31,6 @@ export default class BuildDetail extends Component {
       .catch(err =>
         console.error('deu ruim')
       )
-     //load token
-     /*AsyncStorage.getItem('token')
-     .then(token => {
-       if (token && this.props.slugApp) {
-         this.setState({token})
-         this.setState({slugApp : this.props.slugApp})
-       }
-     })
-     .then(() => {
-       fetch('https://api.bitrise.io/v0.1/apps/' + this.state.slugApp + '/builds/' + this.state.slugBuild,
-         {
-           method: 'GET',
-           headers: {
-             Accept: 'application/json',
-             'Content-Type': 'application/json',
-             'Authorization': 'token ' + this.state.token
-           }
-         })
-         .then(resposta => resposta.json())
-         .then(json =>
-           this.setState({ builds: json })
-         ).catch(err =>
-           console.error('deu ruim')
-         )
-
-     })*/
   }
 
   render() {

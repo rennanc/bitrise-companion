@@ -12,6 +12,8 @@ import {
 
 import Artifact from '../../components/Artifact'
 
+import BitriseFetchService from '../../services/BitriseFetchService'
+
 export default class Artifacts extends Component {
 
   constructor() {
@@ -59,39 +61,18 @@ export default class Artifacts extends Component {
   };
 
   loadArtifacts(){
-    AsyncStorage.getItem('token')
-      .then(token => {
-        if (token && this.props.slugApp) {
-          this.setState({ 
-            token,
-            slugApp: this.props.slugApp,
-            slugBuild: this.props.slugBuild,
-            loading: true,
-          });
-        }
-      })
-      .then(() => {
-        fetch('https://api.bitrise.io/v0.1/apps/' + this.state.slugApp + '/builds/' + this.state.slugBuild + '/artifacts',
-          {
-            method: 'GET',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-              'Authorization': 'token ' + this.state.token
-            }
-          })
-          .then(resposta => resposta.json())
-          .then(json =>
-            this.setState({ 
-              artifacts: json,
-              loading: false,
-              refreshing: false,
-            })
-          ).catch(err =>
-            console.error('deu ruim')
-          )
 
-      })
+    this.setState({ loading: true })
+    BitriseFetchService.getArtifacts(this.props.slugApp, this.props.slugBuild)
+      .then(json =>
+        this.setState({
+          artifacts: json,
+          loading: false,
+          refreshing: false,
+        })
+      ).catch(err =>
+        console.error('deu ruim')
+      )
   }
 
   componentDidMount() {
@@ -111,7 +92,9 @@ export default class Artifacts extends Component {
             renderItem={({ item }) =>
               <Artifact 
                 showArtifactDetailCallback={this.showArtifactDetailCallback.bind(this)}
-                artifact={item}/>
+                artifact={item}
+                slugApp={this.state.slugApp}
+                slugBuild={this.state.slugBuild}/>
             }
           />
         </View>
