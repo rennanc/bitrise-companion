@@ -4,7 +4,7 @@
 <p>I Rennan built the Bitrise Companion app as a open source app. This SERVICE is provided by Rennan with Bitrise API with at no cost and is intended
     for use as is.</p>
 <p>This page is used to inform website visitors regarding my policies with the collection, use, and
-    disclosure of Personal Information if anyone decided to use [my|our] Service.</p>
+    disclosure of Personal Information if anyone decided to use my Service.</p>
 <p>If you choose to use my Service, then you agree to the collection and use of information in
     relation with this policy. The Personal Information that I collect are used for providing and
     improving the Service. I will not use or share your information with anyone except as described
@@ -26,7 +26,7 @@
     operating system version, configuration of the app when utilising my Service, the time and date
     of your use of the Service, and other statistics.</p>
 
-<p><strong>Service Providers</strong></p> <!-- This part need seem like it's not needed, but if you use any Google services, or any other third party libraries, chances are, you need this. -->
+<p><strong>Service Providers</strong></p>
 <p>I may employ third-party companies and individuals due to the following reasons:</p>
 <ul>
     <li>To facilitate our Service;</li>
