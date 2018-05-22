@@ -11,6 +11,9 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import RNFetchBlob from 'react-native-fetch-blob';
+
+import BitriseFetchService from '../services/BitriseFetchService'
 
 export default class Artifact extends Component {
 
@@ -19,6 +22,59 @@ export default class Artifact extends Component {
         this.state = {
           artifact: '',
         }
+    }
+
+    componentDidMount() {
+        this.getArtifactDetails()
+    }
+
+    getArtifactDetails(){
+        BitriseFetchService.getArtifactDetails(this.props.slugApp, this.props.slugBuild, this.props.artifact.slug)
+            .then(json =>
+                this.setState({ artifact: json.data })
+            )
+            .catch(err =>
+                console.error('deu ruim' + err.message)
+            )
+    }
+
+    downloadFile(artifact) {
+        if (artifact) {
+            RNFetchBlob
+                .config({
+                    addAndroidDownloads: {
+                        useDownloadManager: true,
+                        notification: true,
+                        title: artifact.title,
+                        mediaScannable: true,
+                        mime: 'application/vnd.android.package-archive',
+                        description: 'Baixando do bitrise'
+                    }
+                })
+                .fetch('GET', artifact.expiring_download_url)
+                .then((resp) => {
+                    if (artifact.artifact_type === 'android-apk') {
+                        android.actionViewIntent(res.path(), 'application/vnd.android.package-archive')
+                    } else {
+                        resp.path()
+                    }
+                })
+        }
+    }
+
+    shareLink(artifact) {
+        Share.share({
+            message: 'Baixe o Aplicativo pelo Bitrise ' + artifact.public_install_page_url,
+            url: artifact.public_install_page_url,
+            title: artifact.title
+        }, {
+                // Android only:
+                dialogTitle: 'Baixar Aplicativo do Bitrise',
+                // iOS only:
+                excludedActivityTypes: [
+                    'com.apple.UIKit.activity.PostToTwitter'
+                ]
+            })
     }
     
     getArtifactSize(artifact){
@@ -40,22 +96,31 @@ export default class Artifact extends Component {
     
 
     render() {
-        const { artifact, showArtifactDetailCallback } = this.props;
+        const { artifact } = this.props;
 
         return (
             <View>
-                <TouchableOpacity style={styles.container}
-                    onPress={() => { showArtifactDetailCallback(artifact.slug) }}>
-                    <View style={styles.details}>
-                        <View style={[styles.row, styles.borderDivision]}>
-                            <Icon size={30} name={this.getPublicStatus()} color="#aaaaaa"/>
-                            <Text style={[styles.row_text, styles.branch]}>{artifact.title}</Text>
-                        </View>
-                        <View style={styles.row}>
-                            <Text style={styles.row_text}>{this.getArtifactSize()}</Text>
-                        </View>
+                <View style={styles.details}>
+                    <View style={[styles.row, styles.borderDivision]}>
+                        <Icon size={30} name={this.getPublicStatus()} color="#aaaaaa"/>
+                        <Text style={[styles.row_text, styles.branch]}>{artifact.title}</Text>
                     </View>
-                </TouchableOpacity>
+
+                    <View style={styles.row}>
+                        <Text style={styles.row_text}>{this.getArtifactSize()}s</Text>
+
+                        <TouchableOpacity onPress={() => this.downloadFile(this.state.artifact)}>
+                            <Icon style={styles.icon} size={15} name="file-download" color="#67c1f5" />
+                        </TouchableOpacity>
+                        {
+                            this.state.artifact.is_public_page_enabled ?
+                                <TouchableOpacity onPress={() => this.shareLink(this.state.artifact)}>
+                                    <Icon style={styles.icon} size={15} name="share" color="#aaaaaa" />
+                                </TouchableOpacity>
+                                : null
+                        }
+                    </View>
+                </View>
             </View>
         );
     }

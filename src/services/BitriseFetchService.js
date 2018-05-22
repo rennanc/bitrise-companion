@@ -72,7 +72,39 @@ export default class BitriseFetchService{
                     headers: new Headers(this.getHeader(token))
                 }
             })
-            .then(requestInfo => fetch('https://api.bitrise.io/v0.1/apps/' + slugApp + '/builds/' + slugBuild, requestInfo))
+            .then(requestInfo => fetch(bitriseApiAddress + 'apps/' + slugApp + '/builds/' + slugBuild, requestInfo))
+            .then(response => {
+                if (response.ok)
+                    return response.json()
+                throw new Error('Ocorreu um problema ao obter os dados')
+            })
+    }
+
+    static getArtifacts(slugApp, slugBuild){
+        return AsyncStorage.getItem('token')
+            .then(token => {
+                return {
+                    method: 'GET',
+                    headers: new Headers(this.getHeader(token))
+                }
+            })
+            .then(requestInfo => fetch(bitriseApiAddress + 'apps/' + slugApp + '/builds/' + slugBuild + '/artifacts', requestInfo))
+            .then(response => {
+                if (response.ok)
+                    return response.json()
+                throw new Error('Ocorreu um problema ao obter os dados')
+            })
+    }
+
+    static getArtifactDetails(slugApp, slugBuild, slugArtifact){
+        return AsyncStorage.getItem('token')
+            .then(token => {
+                return{
+                    method: 'GET',
+                    headers: new Headers(this.getHeader(token))
+                }
+            })
+            .then(requestInfo => fetch(bitriseApiAddress + 'apps/' + slugApp + '/builds/' + slugBuild + '/artifacts/' + slugArtifact, requestInfo))
             .then(response => {
                 if (response.ok)
                     return response.json()
