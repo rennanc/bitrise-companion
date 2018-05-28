@@ -34,7 +34,7 @@ export default class Artifact extends Component {
                 this.setState({ artifact: json.data })
             )
             .catch(err =>
-                console.error('deu ruim' + err.message)
+                console.error('deu ruim')
             )
     }
 
@@ -110,12 +110,12 @@ export default class Artifact extends Component {
                         <Text style={styles.row_text}>{this.getArtifactSize()}s</Text>
 
                         <TouchableOpacity onPress={() => this.downloadFile(this.state.artifact)}>
-                            <Icon style={styles.icon} size={15} name="file-download" color="#67c1f5" />
+                            <Icon style={styles.icon} size={25} name="file-download" color="#67c1f5" />
                         </TouchableOpacity>
                         {
                             this.state.artifact.is_public_page_enabled ?
                                 <TouchableOpacity onPress={() => this.shareLink(this.state.artifact)}>
-                                    <Icon style={styles.icon} size={15} name="share" color="#aaaaaa" />
+                                    <Icon style={styles.icon} size={25} name="share" color="#aaaaaa" />
                                 </TouchableOpacity>
                                 : null
                         }

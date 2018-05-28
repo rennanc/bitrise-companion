@@ -29,23 +29,6 @@ export default class Artifacts extends Component {
     }
   }
 
-  showArtifactDetailCallback(slugArtifact){
-    this.props.navigator.showLightBox({
-      screen: 'ArtifactDetail',
-      passProps: {
-        slugApp: this.state.slugApp,
-        slugBuild: this.state.slugBuild,
-        slugArtifact: slugArtifact,
-      },
-      style: {
-        backgroundBlur: "dark",
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-        tapBackgroundToDismiss: true,
-      },
-      animationType: 'slide-up',
-    });
-  }
-
   renderFooter = () => {
     if (!this.state.loading) return null;
     return (
@@ -90,11 +73,11 @@ export default class Artifacts extends Component {
             onRefresh={this.handleRefresh}
             data={this.state.artifacts.data}
             renderItem={({ item }) =>
-              <Artifact 
-                showArtifactDetailCallback={this.showArtifactDetailCallback.bind(this)}
+              <Artifact
+                key={item.slug}
                 artifact={item}
-                slugApp={this.state.slugApp}
-                slugBuild={this.state.slugBuild}/>
+                slugApp={this.props.slugApp}
+                slugBuild={this.props.slugBuild}/>
             }
           />
         </View>

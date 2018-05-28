@@ -89,7 +89,7 @@ export default class Log extends Component {
           onRefresh={this.handleRefresh}
           data={this.state.logs.log_chunks}
           renderItem={({ item }) =>
-            <Text style={styles.log_text}>{item.chunk}</Text>
+            <Text key={item.position} style={styles.log_text}>{item.chunk}</Text>
           }
         />
       </View>
