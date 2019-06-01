@@ -18,26 +18,71 @@ Navigation.registerComponent('Artifacts', () => Artifacts)
 Navigation.registerComponent('Artifact', () => Artifact)
 Navigation.registerComponent('ScannerToken', () => ScannerToken)
 
+
+Navigation.setDefaultOptions({
+  topBar: {
+    title: {
+      color: '#fff',
+    },
+    background: {
+      color: '#3aa792'
+    },
+    backButton: {
+      color: '#fff'
+    }
+  },
+  statusBar : {
+    visible: true,
+     style: 'light',
+     backgroundColor: '#3aa792'
+  }
+})
+
 AsyncStorage.getItem('token')
     .then(token => {
         if (token) {
             return {
-                screen: 'Home',
-                title: 'Home',
-                navigatorStyle: {
-                    navBarHidden: true
-                }
+                name: 'Home',
+                options: {
+                    topBar: {
+                        title: {
+                            text: 'Home'
+                        },
+                        visible: false,
+                        height: 0
+                    }
+                },
             }
         }
 
         return {
-            screen: 'Login',
-            title: 'Login',
-            navigatorStyle: {
-                navBarHidden: true
-            }
+            name: 'Login',
+            options: {
+                topBar: {
+                    title: {
+                        text: 'Login'
+                    },
+                    visible: false,
+                    height: 0
+                }
+            },
         }
     })
+    .then(screen => {
+        Navigation.setRoot({
+            root: {
+              stack: {
+                id: screen.name,
+                options: {},
+                children: [
+                  {
+                    component: screen
+                  }
+                ]
+              }
+            }
+          });
+      })
     .then(screen => Navigation.startSingleScreenApp({ screen }))
 
 

@@ -1,4 +1,3 @@
 <resources>
-
-    <string name="app_name">Bitrise Companion</string>
+    <string name="app_name">bitrise-companion</string>
 </resources>

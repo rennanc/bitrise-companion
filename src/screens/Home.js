@@ -11,6 +11,7 @@ import {
   Image,
   ActivityIndicator,
 } from 'react-native'
+import { Navigation } from 'react-native-navigation'
 
 import Application from '../components/Application'
 import Icon from 'react-native-vector-icons/MaterialIcons'
@@ -46,7 +47,23 @@ export default class Home extends Component {
 
   showBuildsCallback(app){
 
-    this.props.navigator.push({
+    Navigation.push(this.props.componentId,{
+      component: {
+        name: 'Builds',
+        options: {
+          topBar: {
+            title: {
+              text: 'Builds of ' + app.title,
+            },
+          },
+        },
+        passProps: {
+          slugApp: app.slug
+        },
+      }
+    });
+
+    /*this.props.navigator.push({
       screen: 'Builds',
       title: 'Builds of ' + app.title,
       passProps: {
@@ -57,7 +74,7 @@ export default class Home extends Component {
         navBarTextColor: '#fff',
         navBarButtonColor: '#fff',
       }
-    });
+    });*/
   }
 
   renderHeader = () => {
