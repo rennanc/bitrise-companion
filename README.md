@@ -1,5 +1,6 @@
-# Bitrise Companion (Unofficial App) [![Build Status](https://www.bitrise.io/app/4ba5613c780c286f/status.svg?token=DdUSNiFheQQs8V1lfocYEA)](https://www.bitrise.io/app/4ba5613c780c286f)
-www.bitrise.io
+# Bitrise Companion (Unofficial App) [![Build Status](https://app.bitrise.io/app/4ba5613c780c286f/status.svg?token=DdUSNiFheQQs8V1lfocYEA)](https://app.bitrise.io/app/4ba5613c780c286f)
+
+
 
 ```
 $ yarn or npm install
